@@ -29,3 +29,22 @@ The shell command below is used to complete this in a single one-liner. This tak
 ```sh
 tshark -r dns_exfil.pcapng -Y 'dns.qry.name contains "data.exfiltrated.com" && ip.dst == 8.8.8.8' -T fields -e dns.qry.name | awk -F. '{print $1}' | tr -d '\n'  | base32 -d > carved.jpg
 ```
+
+## Ephemeral
+### Description 
+We've received intelligence that an attacker is hosting flags for others to find. However, it seems that this flag is hosted on a non-standard port. Can you find the service and read the flag?
+
+### Tested Areas
+This revolves around a candidate's ability to scan all TCP ports to find an open port. The service is hosted on TCP port 51147.
+
+### Solution
+After the Docker container starts within CTFd, the candidate will be presented with an IP. The candidate will need to use a port scanning tool, such as `nmap` to scan all ports for a listening service.
+
+```sh
+nmap -p- -sV -v -T5 {{IP of Docker Container}}
+```
+
+# Artifacts
+The following artifacts are provided to solve this challenge:
+
+{{IP of Docker Container}}
