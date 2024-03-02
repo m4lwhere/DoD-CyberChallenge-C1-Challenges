@@ -7,7 +7,7 @@ Challenges for the C1 CTF
 |------|-----|--------|----------|------------|-----|
 |✅|Exfil|Forensics|Medium|PCAP Analysis |DNS exfil|
 |❌|unk|Malware/RE|Medium|Malware Reversal|Cobalt Strike Powershell|
-|❌|unk|Networking & Recon|Easy|Scanning|Open Ports|
+|✅|Ports|Networking & Recon|Easy|Scanning|Open Ports|
 |❌|unk|Networking & Recon|Hard|Fuzzing|Fuzzing Scenarios?|
 |❌|unk|Web|Medium|Find vulns in source|Reveal source code|
 
