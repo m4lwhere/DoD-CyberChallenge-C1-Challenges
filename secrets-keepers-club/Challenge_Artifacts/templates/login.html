@@ -1,0 +1,41 @@
+<!-- templates/login.html -->
+<html>
+<head>
+    <title>Login - The Secret Keepers' Club</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <input type="button" value="Login" onclick="submitLogin()">
+    </form>
+    <script>
+        function submitLogin() {
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "username": $("#username").val(),
+                    "password": $("#password").val()
+                }),
+                success: function(response) {
+                    localStorage.setItem('access_token', response.access_token);
+                    alert('Login successful!');
+                    // Redirect to a logged-in page or dashboard
+                    // For demonstration, redirecting to home
+                    window.location.href = "/";
+                },
+                error: function(response) {
+                    alert('Login failed. Please check your username and password and try again.');
+                }
+            });
+        }
+    </script>
+    <a href="/register">Need an account? Register here.</a>
+</body>
+</html>

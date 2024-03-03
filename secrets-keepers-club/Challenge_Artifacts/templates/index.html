@@ -1,0 +1,69 @@
+<!-- templates/index.html -->
+<html>
+<head>
+    <title>Home - The Secret Keepers' Club</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            const token = localStorage.getItem('access_token');
+            if (!token) {
+                window.location.href = "/login";
+                return;
+            }
+
+            // Load existing secrets
+            $.ajax({
+                type: "GET",
+                url: "/secrets",
+                contentType: "application/json",
+                headers: {"Authorization": "Bearer " + token},
+                success: function(response){
+                    response.forEach(function(secret){
+                        $("body").append(`<p>${secret}</p>`);
+                    });
+                },
+                error: function(){
+                    $("body").append('<p>No secrets associated with this account!</p>');
+                }
+            });
+
+            // Handle new secret submission
+            $("#secretForm").submit(function(event){
+                event.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/add_secret",
+                    contentType: "application/json",
+                    headers: {"Authorization": "Bearer " + token},
+                    data: JSON.stringify({
+                        "secret": $("#secret").val(),
+                    }),
+                    success: function(response){
+                        alert("Secret added successfully!");
+                        location.reload(); // Reload to see the new secret
+                    },
+                    error: function(){
+                        alert("Failed to add secret.");
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Welcome to The Secret Keepers' Club!</h2>
+    <form id="secretForm">
+        <input type="text" id="secret" name="secret" placeholder="Your secret here" required>
+        <input type="submit" value="Submit Secret">
+    </form>
+    <button id="logoutButton">Logout</button>
+
+<script>
+    document.getElementById('logoutButton').addEventListener('click', function() {
+        localStorage.removeItem('access_token'); // Remove the token
+        window.location.href = '/login'; // Redirect to the login page
+    });
+</script>
+
+</body>
+</html>

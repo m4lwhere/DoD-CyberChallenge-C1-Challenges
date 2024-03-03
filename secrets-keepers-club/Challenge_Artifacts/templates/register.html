@@ -1,0 +1,43 @@
+<!-- templates/register.html -->
+<html>
+<head>
+    <title>Register - The Secret Keepers' Club</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2>Register</h2>
+    <form id="registerForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <input type="button" id="submitBtn" value="Register">
+    </form>
+    <a href="/login">Already have an account? Login here.</a>
+
+    <script>
+        $(document).ready(function() {
+            $('#submitBtn').click(function(e) {
+                e.preventDefault(); // Prevent default form submission
+                var userData = {
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/register",
+                    contentType: "application/json",
+                    data: JSON.stringify(userData),
+                    success: function(response) {
+                        alert('Registration successful!');
+                        window.location.href = "/login"; // Redirect to login page
+                    },
+                    error: function(response) {
+                        alert('Registration failed: ' + response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
