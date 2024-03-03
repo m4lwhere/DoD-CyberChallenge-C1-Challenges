@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, make_response, render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 import os
 
 app = Flask("app")
@@ -30,9 +30,20 @@ class Secret(db.Model):
         return f'<Secret {self.content}>'
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
+
+@app.route('/getname', methods=['GET'])
+@jwt_required()
+def getname():
+    current_user_username = get_jwt_identity()['username']
+    user = User.query.filter_by(username=current_user_username).first()
+
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+    else:
+        return jsonify({'username': current_user_username})
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -101,7 +112,7 @@ def create_admin_and_secret():
         db.session.commit()
     
     # Check if the admin already has the default secret
-    admin_secret_content = "The most secretive secret of all."
+    admin_secret_content = 'flag{oops_I_l34k3d_my_k3ys!}'
     admin_secret = Secret.query.filter_by(user_id=admin.id, content=admin_secret_content).first()
     if not admin_secret:
         # Add a default secret for the admin

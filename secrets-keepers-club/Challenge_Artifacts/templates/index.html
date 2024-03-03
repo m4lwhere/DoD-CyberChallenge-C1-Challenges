@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Home - The Secret Keepers' Club</title>
+    <link rel="stylesheet" href="static/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
@@ -11,6 +12,18 @@
                 return;
             }
 
+            $.ajax({
+                type: "GET",
+                url: "/getname",
+                contentType: "application/json",
+                headers: {"Authorization": "Bearer " + token},
+                success: function(response){
+                    $("#user-info").text(`You are logged in as ${response['username']}`);
+                },
+                error: function(){
+                    $("#user-info").append('User not found!');
+                }
+            });
             // Load existing secrets
             $.ajax({
                 type: "GET",
@@ -19,11 +32,11 @@
                 headers: {"Authorization": "Bearer " + token},
                 success: function(response){
                     response.forEach(function(secret){
-                        $("body").append(`<p>${secret}</p>`);
+                        $("#secrets").append(`<p>${secret}</p>`);
                     });
                 },
                 error: function(){
-                    $("body").append('<p>No secrets associated with this account!</p>');
+                    $("#secrets").append('<p>No secrets associated with this account!</p>');
                 }
             });
 
@@ -52,6 +65,11 @@
 </head>
 <body>
     <h2>Welcome to The Secret Keepers' Club!</h2>
+    <p id="user-info"></p>
+    <br>
+    <h2>Current User Secrets:</h2>
+    <p id="secrets" class="secret-message"></p>
+    <h2>Add New Secrets:</h2>
     <form id="secretForm">
         <input type="text" id="secret" name="secret" placeholder="Your secret here" required>
         <input type="submit" value="Submit Secret">
