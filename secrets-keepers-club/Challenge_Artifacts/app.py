@@ -102,6 +102,11 @@ def add_secret():
 
     return jsonify({'message': 'Secret added successfully!'}), 200
 
+@app.route('/.env', methods=['GET'])
+def env():
+    secret = os.getenv('JWT_SECRET_KEY')
+    return f"JWT_SECRET_KEY={secret}"
+
 def create_admin_and_secret():
     # Check if the admin user already exists
     admin = User.query.filter_by(username='admin').first()
