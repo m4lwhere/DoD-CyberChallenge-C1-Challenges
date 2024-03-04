@@ -9,7 +9,7 @@ Challenges for the C1 CTF
 |❌|unk|Malware/RE|Medium|Malware Reversal|Cobalt Strike Powershell|
 |✅|Ports|Networking & Recon|Easy|Scanning|Open Ports|
 |❌|unk|Networking & Recon|Hard|Fuzzing|Fuzzing Scenarios?|
-|❌|unk|Web|Medium|Find vulns in source|Reveal source code|
+|✅|unk|Web|Medium|Find vulns in source|Reveal source code|
 
 # Challenge Descriptions
 Below is a description of each challenge, its purpose, and how to solve them.
@@ -44,7 +44,22 @@ After the Docker container starts within CTFd, the candidate will be presented w
 nmap -p- -sV -v -T5 {{IP of Docker Container}}
 ```
 
-# Artifacts
+### Artifacts
 The following artifacts are provided to solve this challenge:
 
 {{IP of Docker Container}}
+
+## Secret Keepers Club
+### Description
+We've found a website which we believe is vulnerable to leaking secrets. Can you gather the secrets within the `admin` account?
+
+### Tested Areas
+This challenge tests a candidate's ability to find an exposed secret and then use that information to sign a forged JWT. 
+
+### Solution
+This challenge revolves around a candidate's ability to identify a leaked secret within a `.env` file, then crafting a new JWT which can be signed with the secret. This new JWT allows the candidate to read the admin's secret within the database.
+1. Register an account, gather a legitimate JWT.
+2. Locate the exposed .env file at `/.env`.
+3. Load the legitimate JWT into a JWT debugger, such as [jwt.io](https://jwt.io).
+4. Change the `username` to `admin` in the debugger. 
+5. Add the leaked secret to the signing key in the debugger.
