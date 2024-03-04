@@ -9,7 +9,7 @@ Challenges for the C1 CTF
 |❌|unk|Malware/RE|Medium|Malware Reversal|Cobalt Strike Powershell|
 |✅|Ports|Networking & Recon|Easy|Scanning|Open Ports|
 |❌|unk|Networking & Recon|Hard|Fuzzing|Fuzzing Scenarios?|
-|✅|unk|Web|Medium|Find vulns in source|Reveal source code|
+|✅|unk|Web|Medium|Web Exploitation Attacks|Find exposed secrets|
 
 # Challenge Descriptions
 Below is a description of each challenge, its purpose, and how to solve them.
