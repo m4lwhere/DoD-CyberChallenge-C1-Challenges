@@ -80,7 +80,6 @@ def secret():
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
-    # Assuming each secret has a 'content' field to store the secret text
     secrets_query = Secret.query.filter_by(user_id=user.id)
     secrets = [secret.content for secret in secrets_query.all()]
 
@@ -117,7 +116,7 @@ def create_admin_and_secret():
         db.session.commit()
     
     # Check if the admin already has the default secret
-    admin_secret_content = 'flag{oops_I_l34k3d_my_k3ys!}'
+    admin_secret_content = 'C1{oops_I_l34k3d_my_k3ys!}'
     admin_secret = Secret.query.filter_by(user_id=admin.id, content=admin_secret_content).first()
     if not admin_secret:
         # Add a default secret for the admin
