@@ -6,7 +6,7 @@ Challenges for the C1 CTF
 |Status|Title|Category|Difficulty|Tested Areas|Notes|
 |------|-----|--------|----------|------------|-----|
 |✅|Exfil|Forensics|Medium|PCAP Analysis |DNS exfil|
-|❌|unk|Malware/RE|Medium|Malware Reversal|Cobalt Strike Powershell|
+|✅|Ferromagnetic|Malware/RE|Medium|Malware Reversal|Cobalt Strike Powershell|
 |✅|Ports|Networking & Recon|Easy|Scanning|Open Ports|
 |❌|unk|Networking & Recon|Hard|Fuzzing|Fuzzing Scenarios?|
 |✅|unk|Web|Medium|Web Exploitation Attacks|Find exposed secrets|
@@ -29,6 +29,33 @@ The shell command below is used to complete this in a single one-liner. This tak
 ```sh
 tshark -r dns_exfil.pcapng -Y 'dns.qry.name contains "data.exfiltrated.com" && ip.dst == 8.8.8.8' -T fields -e dns.qry.name | awk -F. '{print $1}' | tr -d '\n'  | base32 -d > carved.jpg
 ```
+## Ferromagnetic
+### Description
+We've intercepted a malicious file which appears to be doing something bad, can you find out what it is? The password to decrypt the ZIP is `infected`. 
+
+Note: While the malicious actions themselves were removed, this file will set off Anti-Virus detections. 
+
+### Hints
+1. Review https://forensicitguy.github.io/inspecting-powershell-cobalt-strike-beacon/
+2. If you're using CyberChef, ensure the XOR is set to Decimal, not Hex!
+
+### Tested Areas
+This challenge tests the candidate's ability to reverse a PowerShell Cobalt Strike beacon. These types of files are used to launch the beacon on an asset to be used in follow-on attacks. Being able to decode these types of attacks helps an analyst identify and classify an attack against their organization. 
+
+### Solution
+Begin by extracting the file using the password `infected`. Once extracted and investigated, the candidate should notice that this file takes a Base64 string and decodes it.
+
+Further analysis should give the candidate clues that this is a Cobalt Strike beacon. Googling for information should reveal more resources, such as the blog by Tony Lambert (https://forensicitguy.github.io/inspecting-powershell-cobalt-strike-beacon/). 
+
+The most important part is identifying the `$var_code` variable. This is XOR'd with the value `35` in order to hide the true intentions of the malware. 
+
+Using a tool such as CyberChef, candidates can decode the Base64 and XOR the bytes to see the values. 
+- NOTE: In CyberChef, ensure the XOR with `35` is set as `Decimal`, not `Hex`
+- See sample below: 
+    - https://gchq.github.io/CyberChef/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true,false)XOR(%7B'option':'Decimal','string':'35'%7D,'Standard',false)&input=V0UrY2I5UnVDUWpqVUN0UWlJMFRHQjRKMWRCUGdvMFYzTkNhOHV5UGpxbUJLOGREUk1DMWVYckN6VnRWcGVKd2hsMjBJZWFMUzNQNk42QzZEdjhCT3NyZ1NJSjRFOHJxSWlNank2amMzTndNVVZOQUl4d2tEMnZhVVlpUVVVbGlNejlqdXpUellBNkYwbzE4K0J5VzJNMU5sdzA3Y0JxUmEyZ3F5Mm5DWEZacGVJWGU3QnowK09uZ0NPNHQwbXdCVHFyRTU3cnloTHY3WjJrOGhaRzBJMnRNVUZjWkEyQVNXRTVDVDFSQ1VVWjhURUZGVmxCQVFsY1NFMDE4RjAxSGZFNFhUUkpUVms4WFYwb1RUUUplTGlsaVFFQkdVMWNaQXdrTUNTNHBkbEJHVVE1aVJFWk5WeGtEYmt4WlNrOVBRZ3dXRFJNREMzUktUVWRNVkZBRGJYY0RGUTBTQ2dOaVUxTlBSblJHUVdoS1Z3d1dFQlFORUJVREMyaHJkMjV2RHdOUFNraEdBMlJHUUVoTUNpNHBJMDB3clJHL3h1NURFN3RiZnZ0aGhxdTBnNmV0V05qQ3VQeUNKMEpqUW5pbHFpcGJCeHBxcHlxYzZITUJuUS9HZGJEMGxsNmRiZ2wzM1FlU3JIc1JMbGp4ZGNsSWxvNmYxZ3RXbzRLRXJTMVVUQTRkSVk2UkI5UFliMkFtNm51VDZVOVF0cUZmSCtCS2N1cHQ1T1pISk5FcWFQNjZRY3Y3VDRCV011Q200MWJHZStETGl0N2MzQklSRkEwVERSTU5FaU55S3B4Tw
+
+Within the decrypted values, the flag exists: `C1{malware_obfuscat10n_4nd_m4n1pul4ti0n!}`
+
 
 ## Ephemeral
 ### Description 
