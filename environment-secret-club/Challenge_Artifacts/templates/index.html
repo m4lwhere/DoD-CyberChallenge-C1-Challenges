@@ -1,8 +1,24 @@
-<!-- templates/index.html -->
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Home - The Secret Keepers' Club</title>
+    <title>Home - The Envrionment Secret Club</title>
     <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div class="container">
+    <h1>Welcome to The Envrionment Secret Club!</h1>
+    <p>Place your secrets here, they will be securely stored!</p>
+    <p id="user-info"></p>
+    <br>
+    <img src="static/secret_environment.webp" alt="Whimsical illustration of animals with a secret for the environment" class="fun-picture">
+    <h2>Current User Secrets:</h2>
+    <p id="secrets" class="secret-message"></p>
+    <h2>Add New Secrets:</h2>
+    <form id="secretForm">
+        <input type="text" id="secret" name="secret" placeholder="Your secret here" required>
+        <input type="submit" value="Submit Secret">
+    </form>
+    <button id="logoutButton">Logout</button>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
@@ -22,6 +38,7 @@
                 },
                 error: function(){
                     $("#user-info").append('User not found!');
+                    window.location.href = "/login";
                 }
             });
             // Load existing secrets
@@ -31,9 +48,13 @@
                 contentType: "application/json",
                 headers: {"Authorization": "Bearer " + token},
                 success: function(response){
+                    if (response.length === 0){
+                        $("#secrets").append('<p>No secrets associated with this account!</p>');
+                    } else {
                     response.forEach(function(secret){
                         $("#secrets").append(`<p>${secret}</p>`);
                     });
+                }
                 },
                 error: function(){
                     $("#secrets").append('<p>No secrets associated with this account!</p>');
@@ -62,20 +83,6 @@
             });
         });
     </script>
-</head>
-<body>
-    <h2>Welcome to The Secret Keepers' Club!</h2>
-    <p id="user-info"></p>
-    <br>
-    <img src="static/secret_meeting.png" alt="Whimsical illustration of animals having a secret meeting" class="fun-picture">
-    <h2>Current User Secrets:</h2>
-    <p id="secrets" class="secret-message"></p>
-    <h2>Add New Secrets:</h2>
-    <form id="secretForm">
-        <input type="text" id="secret" name="secret" placeholder="Your secret here" required>
-        <input type="submit" value="Submit Secret">
-    </form>
-    <button id="logoutButton">Logout</button>
 
 <script>
     document.getElementById('logoutButton').addEventListener('click', function() {
@@ -83,6 +90,6 @@
         window.location.href = '/login'; // Redirect to the login page
     });
 </script>
-
+</div>
 </body>
 </html>

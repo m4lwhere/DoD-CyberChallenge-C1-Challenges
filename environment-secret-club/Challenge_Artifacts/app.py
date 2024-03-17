@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, make_response, render_template
+from flask import Flask, request, jsonify, make_response, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 import os
@@ -32,7 +32,7 @@ class Secret(db.Model):
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('index.html')
+        return render_template('index.html')
 
 @app.route('/getname', methods=['GET'])
 @jwt_required()
@@ -103,15 +103,17 @@ def add_secret():
 
 @app.route('/.env', methods=['GET'])
 def env():
-    secret = os.getenv('JWT_SECRET_KEY')
-    return f"JWT_SECRET_KEY={secret}"
+    # secret = os.getenv('JWT_SECRET_KEY')
+    # return f"JWT_SECRET_KEY={secret}"
+    env = os.popen("printenv").read()
+    return env
 
 def create_admin_and_secret():
     # Check if the admin user already exists
     admin = User.query.filter_by(username='admin').first()
     if not admin:
         # Create the admin user (ensure to hash the password in a real application)
-        admin = User(username='admin', password='admin', role='admin')
+        admin = User(username='admin', password='this_Should_n0t_be_Guessed!', role='admin')
         db.session.add(admin)
         db.session.commit()
     

@@ -83,7 +83,7 @@ a:hover {
 
 .fun-picture {
     display: block;
-    max-width: 25%; /* Makes image responsive */
+    max-width: 350px; /* Makes image responsive */
     height: auto; /* Maintain aspect ratio */
     margin: 20px auto; /* Center the image and add some space around it */
     border: 5px solid #FFD700; /* Golden frame around the picture */
