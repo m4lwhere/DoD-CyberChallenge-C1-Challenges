@@ -18,6 +18,11 @@ Below is a description of each challenge, its purpose, and how to solve them.
 ### Description
 We've been alerted that something's been stolen from our network, but none of our sensors found anything out of the ordinary. Can you find if a flag was stolen from our network in the packet capture attached?
 
+### Hints
+1. One set of queries is different than the others, isolate them!
+2. The data is Base32 encoded. Keep it in order!
+3. Don't do it manually! Use `tshark` or `scapy` to programmatically access the data.
+
 ### Tested Areas
 This involves identifying interesting data which should be investigated further. Once this data is located, students are expected to isolate this further and then programmatically gather the subdomains. 
 
@@ -27,8 +32,11 @@ This challenge involves identifying suspicious activity within a pcap file and i
 The shell command below is used to complete this in a single one-liner. This takes the pcap file, isolates the queries to the DNS server for the suspicious domain, then gathers only the DNS query. From this information, it will take just the interesting portion of the subdomain which is base32 encoded. 
 
 ```sh
-tshark -r dns_exfil.pcapng -Y 'dns.qry.name contains "data.exfiltrated.com" && ip.dst == 8.8.8.8' -T fields -e dns.qry.name | awk -F. '{print $1}' | tr -d '\n'  | base32 -d > carved.jpg
+tshark -r exfiltrated.pcap -Y 'dns.qry.name contains "data.exfiltrated.com" && ip.dst == 8.8.8.8' -T fields -e dns.qry.name | awk -F. '{print $1}' | tr -d '\n'  | base32 -d > carved.jpg
 ```
+
+The flag is `C1{dns_3xfil7r4t3d!}`
+
 ## Ferromagnetic
 ### Description
 We've intercepted a malicious file which appears to be doing something bad, can you find out what it is? The password to decrypt the ZIP is `infected`. 
@@ -61,6 +69,10 @@ Within the decrypted values, the flag exists: `C1{malware_obfuscat10n_4nd_m4n1pu
 ### Description 
 We've received intelligence that an attacker is hosting flags for others to find. However, it seems that this flag is hosted on a non-standard port. Can you find the service and read the flag?
 
+### Hints
+1. Use `nmap` to search for open ports.
+2. Make sure to check for ALL ports!
+
 ### Tested Areas
 This revolves around a candidate's ability to scan all TCP ports to find an open port. The service is hosted on TCP port 51147.
 
@@ -74,11 +86,20 @@ nmap -p- -sV -v -T5 {{IP of Docker Container}}
 ### Artifacts
 The following artifacts are provided to solve this challenge:
 
+```
 {{IP of Docker Container}}
+```
+
+The flag is `C1{ch3ck_4ll_p0rts!}`
 
 ## Secret Keepers Club
 ### Description
 We've found a website which we believe is vulnerable to leaking secrets. Can you gather the secrets within the `admin` account?
+
+### Hints
+1. Debug JWTs with https://jwt.io
+2. Is something stored in the ENVIRONMENT which is leaked?
+3. Change the JWT and re-sign it!
 
 ### Tested Areas
 This challenge tests a candidate's ability to find an exposed secret and then use that information to sign a forged JWT. 
@@ -90,3 +111,5 @@ This challenge revolves around a candidate's ability to identify a leaked secret
 3. Load the legitimate JWT into a JWT debugger, such as [jwt.io](https://jwt.io).
 4. Change the `username` to `admin` in the debugger. 
 5. Add the leaked secret to the signing key in the debugger.
+
+The flag is `C1{oops_I_l34k3d_my_k3ys!}`

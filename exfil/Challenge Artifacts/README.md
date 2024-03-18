@@ -7,4 +7,4 @@ The following artifacts are provided to solve this challenge:
 
 |Filename|SHA1|
 |--------|----|
-|dns_exfil.pcapng|d740b2b0174cd8e852c0727f1c3bf77dfa82cd15|
+|exfiltrated.pcap|960ec60d1d08bbc1336007c8af2cbbd0d8bf8b3c|

