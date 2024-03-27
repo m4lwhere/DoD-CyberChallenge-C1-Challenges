@@ -8,8 +8,8 @@ Challenges for the C1 CTF
 |✅|Exfil|Forensics|Medium|PCAP Analysis |DNS exfil|
 |✅|Ferromagnetic|Malware/RE|Medium|Malware Reversal|Cobalt Strike Powershell|
 |✅|Ports|Networking & Recon|Easy|Scanning|Open Ports|
-|❌|unk|Networking & Recon|Hard|Fuzzing|Fuzzing Scenarios?|
-|✅|unk|Web|Medium|Web Exploitation Attacks|Find exposed secrets|
+|✅|Fuzzy Wuzzy|Networking & Recon|Hard|Fuzzing|Fuzzing Scenarios|
+|✅|Secrets of the Environment Club|Web|Medium|Web Exploitation Attacks|Find exposed secrets|
 
 # Challenge Descriptions
 Below is a description of each challenge, its purpose, and how to solve them.
@@ -92,7 +92,43 @@ The following artifacts are provided to solve this challenge:
 
 The flag is `C1{ch3ck_4ll_p0rts!}`
 
-## Secret Keepers Club
+## Fuzzy Wuzzy
+### Description
+We have a website which we know has some pages on it with flags, we just don't know what the pages are. Can you find all the parts of the flags within this website?
+
+NOTE: You will need to SSH into the container and then use the website hosted on TCP port 80. The flag is in four separate parts.
+
+### Hints
+1. Use a wordlist within the ~/seclists/Discovery/Web-Content directory.
+2. Pay attention to HTTP codes. What does each one mean?
+3. Sometimes we can't list a directory, but we can see things inside of that directory.
+4. Always check returned HTTP headers with something like cURL.
+5. Use the ~/seclists/Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt wordlist for fuzzing.
+5. For fuzzing authentication, the answer will be within ~/seclists/Usernames/top-usernames-shortlist.txt and the ~/seclists/Passwords/2023-200_most_used_passwords.txt. Use BOTH to fuzz across all possible values.
+
+### Tested Areas
+This challenge tests a contestant's abilty to perform fuzzing on a website. Beyond this, the contestant will need to pay attention to how the website and application responds to requests and build additional ways to bypass or get around controls. This represents a contestant's ability to read and understand information returned from the website and apply ways to get around it.
+
+### Solution
+After SSHing into the container, the candidate will notice the `README.md` file and `seclists` directory. The candidate should use `curl` to send a request to the localhost to determine that the website is up and running. This will be accomplished with something similar to below:
+
+```sh
+curl http://localhost
+```
+
+After receiving information that the website is up, the analyst will need to choose from one of the wordlists within the `~/seclists` directory to fuzz for values. The following table represents where the flags are and any additional effort required to gather them.
+
+|#|Flag|Location|Additional Needs|Notes to Solve|
+|-|----|--------|----------------|-----|
+|1|`C1{S3arch_`|`/first`|Curl for that page|`ffuf -w ./seclists/Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt -u http://localhost/FUZZ -ic -c`|
+|2|`4nd_fUzz`|`/apple/thermodynamics`|The `/apple` directory returns a 403. candidates will need to fuzz within the directory to find the flag.|`ffuf -w ./seclists/Discovery/Web-Content/directory-list-lowercase-2.3-medium.txt -u http://localhost/apple/FUZZ -ic -c`|
+|3|`_Ch4ng3_def4ults`|`/puppies`|This flag requires the candidate to change the User Agent presented by the tools. This will check for strings on the User-Agent HTTP header for common hacking tools and prevent access to the flag if detected.|To solve, candidates will either need to change or omit the User-Agent header. `curl -A Different-UA http://localhost/puppies`|
+|4|`_br34k_1n!}`|`/protected`|This is protected by Basic-Auth and will need to be fuzzed.|Candidates will need to use two separate files of usernames and passwords to iterate over. This can be achieved with `wfuzz`: `wfuzz -c -w ./seclists/Usernames/top-usernames-shortlist.txt -w ./seclists/Passwords/500-worst-passwords.txt -p localhost:80:HTTP --basic FUZZ:FUZ2Z --hc 401 "http://localhost/protected"`|
+
+The flag is `C1{S3arch_4nd_fUzz_Ch4ng3_def4ults_br34k_1n!}`
+
+
+## Secrets of the Environment Club
 ### Description
 We've found a website which we believe is vulnerable to leaking secrets. Can you gather the secrets within the `admin` account?
 

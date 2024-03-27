@@ -5,14 +5,14 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Update system and install some essential tools
 RUN apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade && \
-    apt-get install ssh python3-pip supervisor netcat-traditional nmap curl ffuf wfuzz seclists nano -y && \
+    apt-get install ssh python3-pip supervisor netcat-traditional nmap curl ffuf wfuzz seclists nano vim gobuster -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 
 # Setup SSH
 RUN mkdir /var/run/sshd
-RUN echo 'd0n0tgu3ssM3:d0n0tgu3ssM3' | chpasswd # It's better to use SSH keys in real-world scenarios
+RUN echo 'root:d0n0tgu3ssM3' | chpasswd 
 
 # Create a user and set up env for the challenge
 RUN useradd -m -d /home/ctfuser ctfuser

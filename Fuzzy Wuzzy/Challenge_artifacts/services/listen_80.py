@@ -8,7 +8,7 @@ auth = HTTPBasicAuth()
 # Full flag is C1{S3arch_4nd_fUzz_Ch4ng3_def4ults_br34k_1n!}
 
 users = {
-    "admin": generate_password_hash("broncos")
+    "admin": generate_password_hash("Welcome@123")
 }
 
 @app.route('/')
@@ -23,6 +23,8 @@ def home():
 (\__/) ||
 (•ㅅ•) ||
 /|  | づ
+
+The flag is present on this website, but split across four parts.
 
 You will need to fuzz for specific values in order to build the flag.
 
@@ -62,7 +64,7 @@ def apple():
 @app.route('/puppies')
 def bioethics():
     user_agent = request.headers.get('User-Agent', '')
-    if 'fuzz faster u fool' in user_agent.lower() or 'curl' in user_agent.lower():
+    if 'fuzz faster u fool' in user_agent.lower() or 'curl' in user_agent.lower() or 'gobuster' in user_agent.lower() or 'wfuzz' in user_agent.lower():
         return f"Hacking Tool {user_agent} detected!", 403
     return """
             ''',
@@ -110,4 +112,4 @@ def protected():
     """ + "Flag part 4: _br34k_1n!}"
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=False)

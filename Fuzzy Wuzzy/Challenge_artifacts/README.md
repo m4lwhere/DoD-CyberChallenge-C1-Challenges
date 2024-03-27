@@ -17,5 +17,6 @@ The following tools have been installed on this image:
    - curl
    - ffuf
    - wfuzz
+   - gobuster
 
 Choose your tools wisely, may the odds be in your favor!

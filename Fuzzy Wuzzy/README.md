@@ -1,11 +1,5 @@
-# Tabled
-This challenge requires a contestant to establish IPtables or Suricata rules to block traffic. There are three things in particular which need to be blocked:
+# Fuzzy Wuzzy
+We have a website which we know has some pages on it with flags, we just don't know what the pages are. Can you find all the parts of the flags within this website?
 
-## First
-The first is simply blocking all traffic on TCP port 4444. This can be done with iptables or suricata.
-
-## Second
-The second will be blocking inbound requests with a specific HTTP header.
-
-## Third
-The third will be blocking traffic 
+NOTE: You will need to SSH into the container and then use the website hosted on TCP port 80. The flag is in four separate parts.
+The credentials to ssh in are `ctfuser:ctfpassword`.
