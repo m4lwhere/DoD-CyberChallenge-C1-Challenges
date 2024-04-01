@@ -1,0 +1,8 @@
+
+This challenge requires you to find an open port on this machine. There is an ephemeral port running with the flag, you can safely ignore TCP/22.
+
+The following tools are installed to help you with this challenge:
+- nmap
+- curl
+- nc
+
