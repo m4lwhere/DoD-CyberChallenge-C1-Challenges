@@ -15,7 +15,7 @@ RUN mkdir /var/run/sshd
 RUN echo 'root:d0n0tgu3ssM3' | chpasswd 
 
 # Create a user and set up env for the challenge
-RUN useradd -m -d /home/ctfuser ctfuser
+RUN useradd -m -d /home/ctfuser -s /bin/bash ctfuser
 RUN touch /home/ctfuser/.hushlogin
 RUN echo 'ctfuser:ctfpassword' | chpasswd
 RUN echo "unset HISTFILE" |  tee -a /home/ctfuser/.bashrc

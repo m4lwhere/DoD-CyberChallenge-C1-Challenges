@@ -8,7 +8,7 @@ auth = HTTPBasicAuth()
 # Full flag is C1{S3arch_4nd_fUzz_Ch4ng3_def4ults_br34k_1n!}
 
 users = {
-    "admin": generate_password_hash("Welcome@123")
+    "admin": generate_password_hash("maverick")
 }
 
 @app.route('/')
