@@ -101,24 +101,19 @@ def add_secret():
 
     return jsonify({'message': 'Secret added successfully!'}), 200
 
-@app.route('/.env', methods=['GET'])
-def env():
-    # secret = os.getenv('JWT_SECRET_KEY')
-    # return f"JWT_SECRET_KEY={secret}"
-    env = os.popen("printenv").read()
-    return env
-
 def create_admin_and_secret():
     # Check if the admin user already exists
     admin = User.query.filter_by(username='admin').first()
     if not admin:
-        # Create the admin user (ensure to hash the password in a real application)
-        admin = User(username='admin', password='this_Should_n0t_be_Guessed!', role='admin')
+        # Create the admin user
+        password = os.urandom(16).hex()
+        admin = User(username='admin', password=password, role='admin')
+        print(f'Admin password is: {password}')
         db.session.add(admin)
         db.session.commit()
     
     # Check if the admin already has the default secret
-    admin_secret_content = 'C1{oops_I_l34k3d_my_k3ys!}'
+    admin_secret_content = os.getenv('FLAG')
     admin_secret = Secret.query.filter_by(user_id=admin.id, content=admin_secret_content).first()
     if not admin_secret:
         # Add a default secret for the admin
