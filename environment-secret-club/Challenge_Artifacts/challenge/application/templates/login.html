@@ -1,0 +1,52 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - The Envrionment Secret Club</title>
+    <link rel="stylesheet" href="static/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+    <h1>Envrionment Secret Club - Login</h1>
+    <p>In the digital realm's secret garden, the Environment serves as a mystical vault where web applications whisper their deepest secrets—API keys, passwords, and tokens—into the earthen embrace of environmental variables. Some of them can even "git" you going! These hidden runes, protected from the cyber beasts' gaze, empower applications to venture forth securely. As modern-day digital druids, developers safeguard these secrets, ensuring that our web creations navigate the vast online wilderness with confidence and protection, all within the magic of the Environment.</p>
+    <img src="static/secret_meeting.png" alt="Whimsical illustration of animals having a secret meeting in the Environment" class="fun-picture">
+    <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <input type="submit" value="Login">
+    </form>
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent the default form submission
+                submitLogin();
+            });
+        });
+    
+        function submitLogin() {
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "username": $("#username").val(),
+                    "password": $("#password").val()
+                }),
+                success: function(response) {
+                    localStorage.setItem('access_token', response.access_token);
+                    alert('Login successful!');
+                    window.location.href = "/";
+                },
+                error: function(response) {
+                    alert('Login failed. Please check your username and password and try again.');
+                }
+            });
+        }
+    </script>    
+    <a href="/register">Need an account? Register here.</a>
+    </div>
+</body>
+</html>

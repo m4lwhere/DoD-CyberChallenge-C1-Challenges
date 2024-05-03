@@ -1,32 +1,45 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3-alpine
 
-# Set the working directory in the container
+# Install packages
+RUN apk add --update --no-cache git
+
+# Upgrade pip
+RUN python -m pip install --upgrade pip
+
+# Install dependencies
+RUN pip install gunicorn flask python-dotenv Flask-SQLAlchemy flask_jwt_extended bcrypt
+
+# Copy flag
+COPY flag.txt /flag.txt
+
+# Set up fake git
+RUN mkdir /tmp/repo
+
+WORKDIR /tmp/repo
+
+COPY ./git .
+
+RUN git init
+RUN git config --global user.email "m4lwhere@c1.local" && git config --global user.name "m4lwhere"
+RUN git add -A && git commit -m "Initial commit"
+
+# Setup app
+RUN mkdir -p /app
+
+# Switch working environment
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Add application
+COPY challenge .
 
-RUN chmod -R 755 /app/.git
-# Install the dependencies
-# Ensure pip is up to date for security fixes and improvements
-RUN pip install --upgrade pip &&\
-    pip install flask gunicorn python-dotenv Flask-SQLAlchemy flask_jwt_extended
+RUN chmod +x /app/entrypoint.sh
+RUN mv /tmp/repo/.git /app/application/git
 
-RUN apt-get update && apt-get install -y nginx
-RUN rm /etc/nginx/sites-enabled/default
-COPY nginx.conf /etc/nginx/sites-available/
-RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/
+# Expose port the server is reachable on
+EXPOSE 1337
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5001
+# Disable pycache
+ENV PYTHONDONTWRITEBYTECODE=1
 
-# Define environment variable
-ENV FLASK_APP=/app/app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_DEBUG=1
-ENV JWT_SECRET_KEY=thisISmySECRETkeyTHATnobodySTEALS
-ENV FLAG=C1{oops_I_l34k3d_my_k3ys!}
-
-# Run app.py when the container launches
-CMD service nginx start && flask run --host=0.0.0.0
+# Run supervisord
+CMD ["./entrypoint.sh"]
